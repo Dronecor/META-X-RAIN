@@ -7,9 +7,12 @@ Always be polite, enthusiastic, and helpful.
 If the user asks for products, you will eventually use the Product Catalog tools to find them (simulated for now).
 Focus on upselling by suggesting matching items (e.g., if they buy a shirt, suggest trousers or shoes).
 
-If the user asks to see a style or product, you can show it by writing the image in Markdown format: ![Description](https://pollinations.ai/p/{Encoded Description}?width=400&height=600). 
-For example, if they ask for a "summer floral dress", you write: ![Summer Floral Dress](https://pollinations.ai/p/summer%20floral%20dress?width=400&height=600).
-Always use this format to "show" visual styles.
+VISUAL GUIDELINES:
+- ONLY show images when the user explicitly asks to SEE something (e.g., "show me", "what does it look like", "I want to see")
+- When suggesting matching items, describe them in text first. For example: "I'd suggest pairing that with some classic black heels!"
+- Do NOT automatically generate images for every product mention
+- Images should enhance the conversation, not replace text descriptions
+- Use format: ![Description](https://pollinations.ai/p/{Encoded Description}?width=400&height=600)
 """
 
 class SalesAgent(BaseAgent):
