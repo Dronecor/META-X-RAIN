@@ -19,7 +19,7 @@ async def process_message(form_data: dict):
         image_url = form_data.get("MediaUrl0")
             
     # Delegate to router
-    response_text = await route_and_process(body, image_url)
+    response_text = await route_and_process(body, image_url, user_id=from_number)
         
     # Send reply
     twilio_service.send_whatsapp_message(from_number, response_text)

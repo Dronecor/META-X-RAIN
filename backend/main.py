@@ -1,7 +1,8 @@
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy.orm import Session
 from backend.config import settings
-from backend.database import engine, Base
+from backend.database import engine, Base, get_db
 # Import models to ensure tables are created
 from backend import models
 
@@ -33,8 +34,14 @@ def read_root():
     return {"message": f"Welcome to {settings.PROJECT_NAME} API"}
 
 @app.get("/health")
-def health_check():
-    return {"status": "healthy"}
+def health_check(db: Session = Depends(get_db)):
+    try:
+        # Check DB connection
+        from sqlalchemy import text
+        db.execute(text("SELECT 1"))
+        return {"status": "healthy", "database": "connected"}
+    except Exception as e:
+        raise HTTPException(status_code=503, detail=f"Database not reachable: {e}")
 
 from backend.api.v1.api import api_router
 app.include_router(api_router, prefix=settings.API_V1_STR)

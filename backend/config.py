@@ -19,7 +19,7 @@ class Settings(BaseSettings):
 
     # AI / Groq
     GROQ_API_KEY: str
-    GROQ_MODEL: str = "llama3-70b-8192"
+    GROQ_MODEL: str = "llama-3.3-70b-versatile"
 
     # Services
     TWILIO_ACCOUNT_SID: str | None = None
@@ -33,7 +33,18 @@ class Settings(BaseSettings):
 
     class Config:
         import os
-        env_file = os.path.join(os.path.dirname(__file__), ".env")
+        # Look for .env in backend/ or root
+        _current_dir = os.path.dirname(__file__)
+        _backend_env = os.path.join(_current_dir, ".env")
+        _root_env = os.path.join(_current_dir, "..", ".env")
+        
+        if os.path.exists(_backend_env):
+            env_file = _backend_env
+        elif os.path.exists(_root_env):
+            env_file = _root_env
+        else:
+            env_file = ".env" # Fallback to default
+            
         extra = "ignore" # Allow extra fields in .env
 
 settings = Settings()

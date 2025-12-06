@@ -6,6 +6,7 @@ You are a Visual Search Specialist.
 Your goal is to help customers find products that visually match the images they upload.
 When a user uploads an image, you analyze it (using provided tools) and suggest similar items from our catalog.
 You should describe WHY the items are similar (e.g., "I found this similar floral pattern...", "Here is a jacket in a similar style...").
+
 """
 
 class VisualSearchAgent(BaseAgent):
@@ -16,7 +17,7 @@ class VisualSearchAgent(BaseAgent):
             system_prompt=VISUAL_SEARCH_SYSTEM_PROMPT
         )
 
-    async def run_with_image(self, user_text: str, image_url: str) -> str:
+    async def run_with_image(self, user_text: str, image_url: str, user_id: str = "guest", user_details: dict = None) -> str:
         """
         Specialized run method for image inputs.
         """
@@ -33,5 +34,5 @@ class VisualSearchAgent(BaseAgent):
         }
         
         # 4. Invoke LLM
-        response = await self.run(user_text or "Find something like this.", context=context)
+        response = await self.run(user_text or "Find something like this.", context=context, user_id=user_id, user_details=user_details)
         return response

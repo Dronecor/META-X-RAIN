@@ -22,6 +22,8 @@ services:
       - "8000:8000"
     environment:
       - DATABASE_URL=postgresql://postgres:password@db:5432/agentic_crm
+    env_file:
+      - .env
     depends_on:
       - db
     command: uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload
@@ -36,6 +38,8 @@ services:
       - "8501:8501"
     environment:
       - BACKEND_API_URL=http://backend:8000/api/v1
+    env_file:
+      - .env
     command: streamlit run frontend_admin/app.py
     depends_on:
       - backend
