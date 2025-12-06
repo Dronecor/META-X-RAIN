@@ -131,15 +131,40 @@ st.markdown("""
     .chat-message.user { background-color: #2b313e }
     .chat-message.bot { background-color: #475063 }
     
-    /* Make images look great */
+    /* Product Card Styling */
     .chat-message img {
         max-width: 100%;
+        max-height: 600px;
         border-radius: 12px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
         margin-top: 10px;
+        margin-bottom: 10px;
         display: block;
         margin-left: auto;
         margin-right: auto;
+    }
+    
+    /* Product name (bold) */
+    .chat-message strong {
+        font-size: 1.1em;
+        color: #ffffff;
+        display: block;
+        margin-top: 15px;
+    }
+    
+    /* Price and stock (italic) */
+    .chat-message em {
+        color: #a8dadc;
+        font-size: 0.95em;
+        display: block;
+        margin-bottom: 5px;
+    }
+    
+    /* Horizontal dividers */
+    .chat-message hr {
+        border: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        margin: 20px 0;
     }
 </style>
 """, unsafe_allow_html=True)
