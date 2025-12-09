@@ -142,7 +142,7 @@ Use this checklist to ensure a smooth deployment of your Agentic AI CRM with Ser
 
   - [ ] **Scout Trends**
     ```powershell
-    curl -X POST http://localhost:8000/api/v1/market-intelligence/scout-trends `
+    curl -X POST http://:8000/api/v1/market-intelligence/scout-trends `
       -H "Content-Type: application/json" `
       -d '{\"timeframe\": \"now 7-d\"}'
     ```
