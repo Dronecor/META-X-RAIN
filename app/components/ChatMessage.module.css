@@ -1,0 +1,163 @@
+.messageWrapper {
+  display: flex;
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.userWrapper {
+  justify-content: flex-end;
+}
+
+.assistantWrapper {
+  justify-content: flex-start;
+}
+
+.messageBubble {
+  max-width: 75%;
+  border-radius: 12px;
+  padding: 10px 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  word-wrap: break-word;
+}
+
+.userBubble {
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  color: #ffffff;
+}
+
+.assistantBubble {
+  background: linear-gradient(135deg, #2a2d3a 0%, #1f2229 100%);
+  color: #e8eaed;
+}
+
+.messageText {
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 8px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.messageText:last-child {
+  margin-bottom: 0;
+}
+
+.messageText strong {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.messageText em {
+  font-style: italic;
+  color: #a8dadc;
+}
+
+.productCard {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 10px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.imageContainer {
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 8px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  overflow: hidden;
+}
+
+.productImage {
+  object-fit: contain;
+  border-radius: 4px;
+  width: 100%;
+  height: auto;
+  max-height: 300px;
+}
+
+.productInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.productName {
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.productDescription {
+  color: #c9d1d9;
+  font-size: 14px;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.productMeta {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.price {
+  color: #4ade80;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.stock {
+  color: #86efac;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.outOfStock {
+  color: #ef4444;
+}
+
+@media (max-width: 768px) {
+  .messageBubble {
+    max-width: 85%;
+  }
+
+  .productCard {
+    padding: 12px;
+  }
+
+  .imageContainer {
+    max-width: 100%;
+  }
+
+  .productName {
+    font-size: 16px;
+  }
+
+  .price {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .messageBubble {
+    max-width: 95%;
+  }
+
+  .messageText {
+    font-size: 14px;
+  }
+}
