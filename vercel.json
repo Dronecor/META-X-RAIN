@@ -20,20 +20,20 @@
         }
     ],
     "env": {
-        "PROJECT_NAME": "@project_name",
-        "SECRET_KEY": "@secret_key",
-        "DATABASE_URL": "@database_url",
-        "GROQ_API_KEY": "@groq_api_key",
-        "GROQ_MODEL": "@groq_model",
-        "TWILIO_ACCOUNT_SID": "@twilio_account_sid",
-        "TWILIO_AUTH_TOKEN": "@twilio_auth_token",
-        "TWILIO_WHATSAPP_NUMBER": "@twilio_whatsapp_number",
-        "SENDGRID_API_KEY": "@sendgrid_api_key",
-        "PINECONE_API_KEY": "@pinecone_api_key",
-        "PINECONE_ENV": "@pinecone_env",
-        "SERPAPI_API_KEY": "@serpapi_api_key",
-        "ADMIN_EMAIL": "@admin_email",
-        "ADMIN_PASSWORD": "@admin_password"
+        "PROJECT_NAME": "@PROJECT_NAME",
+        "SECRET_KEY": "@SECRET_KEY",
+        "DATABASE_URL": "@DATABASE_URL",
+        "GROQ_API_KEY": "@GROQ_API_KEY",
+        "GROQ_MODEL": "@GROQ_MODEL",
+        "TWILIO_ACCOUNT_SID": "@TWILIO_ACCOUNT_SID",
+        "TWILIO_AUTH_TOKEN": "@TWILIO_AUTH_TOKEN",
+        "TWILIO_WHATSAPP_NUMBER": "@TWILIO_WHATSAPP_NUMBER",
+        "SENDGRID_API_KEY": "@SENDGRID_API_KEY",
+        "PINECONE_API_KEY": "@PINECONE_API_KEY",
+        "PINECONE_ENV": "@PINECONE_ENV",
+        "SERPAPI_API_KEY": "@SERPAPI_API_KEY",
+        "ADMIN_EMAIL": "@ADMIN_EMAIL",
+        "ADMIN_PASSWORD": "@ADMIN_PASSWORD"
     },
     "regions": [
         "iad1"
