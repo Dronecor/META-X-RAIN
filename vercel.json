@@ -20,6 +20,9 @@
         }
     ],
     "env": {
+        "PROJECT_NAME": "@project_name",
+        "SECRET_KEY": "@secret_key",
+        "DATABASE_URL": "@database_url",
         "GROQ_API_KEY": "@groq_api_key",
         "GROQ_MODEL": "@groq_model",
         "TWILIO_ACCOUNT_SID": "@twilio_account_sid",

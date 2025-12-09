@@ -11,29 +11,10 @@ langchain-openai
 langchain-postgres
 python-dotenv
 requests
-stripe
 httpx
 jinja2
 python-multipart
-pillow
-numpy
-# For vector store
-pinecone-client
-faiss-cpu
-# For implementation details
-passlib[bcrypt]
-python-jose[cryptography]
-# Streaming and Frontend
-streamlit
-# Messaging
+google-search-results
 twilio
 sendgrid
-# Image / AI
-torch
-transformers
-sentence-transformers
-scikit-learn
-# Web Scouting
-google-search-results
-# Vercel/Serverless
 mangum
