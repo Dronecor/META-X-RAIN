@@ -1,0 +1,48 @@
+{
+    "version": 2,
+    "name": "agentic-ai-crm",
+    "builds": [
+        {
+            "src": "backend/main.py",
+            "use": "@vercel/python",
+            "config": {
+                "maxLambdaSize": "50mb"
+            }
+        }
+    ],
+    "routes": [
+        {
+            "src": "/api/(.*)",
+            "dest": "backend/main.py"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "backend/main.py"
+        }
+    ],
+    "env": {
+        "PROJECT_NAME": "@project_name",
+        "SECRET_KEY": "@secret_key",
+        "DATABASE_URL": "@database_url",
+        "GROQ_API_KEY": "@groq_api_key",
+        "GROQ_MODEL": "@groq_model",
+        "TWILIO_ACCOUNT_SID": "@twilio_account_sid",
+        "TWILIO_AUTH_TOKEN": "@twilio_auth_token",
+        "TWILIO_WHATSAPP_NUMBER": "@twilio_whatsapp_number",
+        "SENDGRID_API_KEY": "@sendgrid_api_key",
+        "PINECONE_API_KEY": "@pinecone_api_key",
+        "PINECONE_ENV": "@pinecone_env",
+        "SERPAPI_API_KEY": "@serpapi_api_key",
+        "ADMIN_EMAIL": "@admin_email",
+        "ADMIN_PASSWORD": "@admin_password"
+    },
+    "regions": [
+        "iad1"
+    ],
+    "functions": {
+        "backend/main.py": {
+            "memory": 3008,
+            "maxDuration": 60
+        }
+    }
+}

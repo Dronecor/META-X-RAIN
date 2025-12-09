@@ -33,3 +33,7 @@ torch
 transformers
 sentence-transformers
 scikit-learn
+# Web Scouting
+google-search-results
+# Vercel/Serverless
+mangum
