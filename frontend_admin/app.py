@@ -3,8 +3,17 @@ import requests
 import pandas as pd
 import os
 
-# Configuration
-BACKEND_URL = os.getenv("NEXT_PUBLIC_BACKEND_API_URL", "http://localhost:8000/api/v1")
+# Configuration - Support both Streamlit Cloud secrets and local env vars
+def get_config(key, default):
+    """Get config from Streamlit secrets or environment variables"""
+    try:
+        # Try Streamlit secrets first (for deployment)
+        return st.secrets.get(key, os.getenv(key, default))
+    except (FileNotFoundError, KeyError):
+        # Fall back to environment variables (for local development)
+        return os.getenv(key, default)
+
+BACKEND_URL = get_config("BACKEND_API_URL", "http://localhost:8000/api/v1")
 st.set_page_config(page_title="ShopBuddy Admin", page_icon="🛍️", layout="wide")
 
 # Styling
@@ -111,8 +120,8 @@ def login():
     password = st.text_input("Password", type="password")
     if st.button("Login"):
         # Simple env-based auth
-        valid_user = os.getenv("ADMIN_USERNAME", "admin")
-        valid_pass = os.getenv("ADMIN_PASSWORD", "admin")
+        valid_user = get_config("ADMIN_USERNAME", "admin")
+        valid_pass = get_config("ADMIN_PASSWORD", "admin")
         
         if username == valid_user and password == valid_pass:
             st.session_state.logged_in = True
