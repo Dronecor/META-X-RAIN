@@ -23,6 +23,7 @@ class ProductCreate(ProductBase):
 class Product(ProductBase):
     id: int
     is_available: bool
+    visual_description: Optional[str] = None
 
     class Config:
         orm_mode = True
@@ -34,7 +35,20 @@ def read_products(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
 
 @router.post("/", response_model=Product)
 def create_product(product: ProductCreate, db: Session = Depends(get_db)):
-    db_product = models.Product(**product.dict())
+    # 1. Generate Visual Description if image provided
+    visual_desc = ""
+    if product.image_url:
+        from backend.services.vision_service import vision_service
+        # Background task ideally, but doing sync for simplicity per prototype
+        print(f"Products Endpoint received image_url: {product.image_url}")
+        visual_desc = vision_service.analyze_image(product.image_url)
+        print(f"Generated Description: {visual_desc}")
+    
+    # 2. Create Product
+    product_data = product.dict()
+    db_product = models.Product(**product_data)
+    db_product.visual_description = visual_desc
+    
     db.add(db_product)
     db.commit()
     db.refresh(db_product)

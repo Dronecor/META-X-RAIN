@@ -25,12 +25,13 @@ class VisualSearchAgent(BaseAgent):
         results = image_search_service.search_by_image(image_url)
         
         # 2. Format results for the LLM
-        results_str = "\n".join([f"- {item['name']} (${item['price']})" for item in results])
+        results_str = "\n".join([f"- {item['name']} (${item['price']}) - ImageURL: {item['image_url']}" for item in results])
         
         # 3. Create context
         context = {
             "User Image URL": image_url,
-            "Visual Search Results": results_str
+            "Visual Search Results": results_str,
+            "Instruction": "You MUST display the product images using Markdown: ![Product Name](ImageURL). Do not just list them."
         }
         
         # 4. Invoke LLM

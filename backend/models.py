@@ -59,6 +59,7 @@ class Product(Base):
     color_options = Column(JSON)
     stock_quantity = Column(Integer, default=0)
     image_url = Column(String)
+    visual_description = Column(Text, nullable=True) # AI-generated description
     embedding_id = Column(String, nullable=True) # Reference to vector DB ID
     metadata_json = Column(JSON, nullable=True)
     is_available = Column(Boolean, default=True)

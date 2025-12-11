@@ -4,7 +4,7 @@ import pandas as pd
 import os
 
 # Configuration
-BACKEND_URL = os.getenv("BACKEND_API_URL", "https://shopbuddy-mk97.onrender.com/api/v1")
+BACKEND_URL = os.getenv("BACKEND_API_URL", "http://localhost:8000/api/v1")
 st.set_page_config(page_title="ShopBuddy Admin", page_icon="🛍️", layout="wide")
 
 # Styling
@@ -67,13 +67,23 @@ def create_product(product_data):
         resp = requests.post(f"{BACKEND_URL}/products/", json=product_data)
         if resp.status_code == 200:
             st.success("Product created successfully!")
-            return True
+            return resp.json()
         else:
             st.error(f"Failed to create product: {resp.text}")
-            return False
+            return None
     except Exception as e:
         st.error(f"Error creating product: {e}")
-        return False
+        return None
+
+def fetch_products():
+    try:
+        resp = requests.get(f"{BACKEND_URL}/products/")
+        if resp.status_code == 200:
+            return resp.json()
+        return []
+    except Exception as e:
+        st.error(f"Error fetching products: {e}")
+        return []
 
 def upload_image(file):
     try:
@@ -151,7 +161,7 @@ else:
         
         if orders:
             for order in orders:
-                with st.expander(f"Order #{order['id']} - {order['status'].upper()} - ${order['total_amount']}"):
+                with st.expander(f"Order #{order['id']} - {order['status'].upper()} - ₦{order['total_amount']}"):
                     col1, col2, col3, col4 = st.columns([2, 1, 1, 2])
                     
                     with col1:
@@ -181,50 +191,90 @@ else:
 
     # --- PRODUCT MANAGEMENT ---
     elif page == "Product Management":
-        st.title("➕ Add New Product")
+        st.title("📦 Product Management")
         
-        with st.form("product_form"):
-            col1, col2 = st.columns(2)
+        tab1, tab2 = st.tabs(["Add New Product", "View Products"])
+        
+        with tab1:
+            st.header("Add New Product")
             
-            with col1:
-                name = st.text_input("Product Name")
-                price = st.number_input("Price ($)", min_value=0.0, step=0.01)
-                category = st.text_input("Category")
-                
-            with col2:
-                stock = st.number_input("Stock Quantity", min_value=0, step=1)
-                description = st.text_area("Description")
-                
-            uploaded_file = st.file_uploader("Product Image", type=['png', 'jpg', 'jpeg'])
+            # Check if we just added a product
+            if "product_added" not in st.session_state:
+                st.session_state.product_added = False
             
-            submitted = st.form_submit_button("Create Product")
-            
-            if submitted:
-                if not name or not price:
-                    st.error("Name and Price are required.")
-                else:
-                    image_url = ""
-                    if uploaded_file:
-                        with st.spinner("Uploading image..."):
-                            url = upload_image(uploaded_file)
-                            if url:
-                                image_url = url
-                                st.success("Image uploaded!")
-                                
-                                # Construct full URL if needed or keep relative depending on how backend sends it back
-                                if not image_url.startswith("http"):
-                                    # If backend returned relative, we might need to store it as is or fix it.
-                                    # The backend /utils/upload returns e.g. "/static/uploads/..."
-                                    pass
+            if st.session_state.product_added:
+                if st.button("🔄 Add Another Product"):
+                    st.session_state.product_added = False
+                    st.rerun()
+                st.info("Reload to add a new product.")
+            else:
+                with st.form("product_form", clear_on_submit=False):
+                    col1, col2 = st.columns(2)
                     
-                    product_data = {
-                        "name": name,
-                        "description": description,
-                        "price": price,
-                        "category": category,
-                        "stock_quantity": stock,
-                        "image_url": image_url
-                    }
+                    with col1:
+                        name = st.text_input("Product Name")
+                        price = st.number_input("Price (₦)", min_value=0.0, step=0.01)
+                        category = st.text_input("Category", placeholder="e.g. suit, dress, shirt")
+                        
+                    with col2:
+                        stock = st.number_input("Stock Quantity", min_value=0, step=1)
+                        description = st.text_area("Description")
+                        
+                    uploaded_file = st.file_uploader("Product Image", type=['png', 'jpg', 'jpeg'])
                     
-                    if create_product(product_data):
-                        st.balloons()
+                    submitted = st.form_submit_button("Create Product")
+                    
+                    if submitted:
+                        if not name or not price:
+                            st.error("Name and Price are required.")
+                        else:
+                            image_url = ""
+                            if uploaded_file:
+                                with st.spinner("Uploading image..."):
+                                    url = upload_image(uploaded_file)
+                                    if url:
+                                        image_url = url
+                                        st.success("Image uploaded!")
+                            
+                            product_data = {
+                                "name": name,
+                                "description": description,
+                                "price": price,
+                                "category": category,
+                                "stock_quantity": stock,
+                                "image_url": image_url
+                            }
+                            
+                            with st.spinner("Creating product and generating description..."):
+                                result = create_product(product_data)
+                            
+                            if result:
+                                 st.balloons()
+                                 st.session_state.product_added = True
+                                 
+                                 st.success("Product Created!")
+                                 st.subheader("Generated Details:")
+                                 st.json(result)
+                                 
+                                 if result.get("visual_description"):
+                                     st.info(f"✨ AI Visual Description: {result['visual_description']}")
+                                 else:
+                                     st.warning("No visual description generated (or image missing).")
+                                     
+                                 st.rerun()
+
+        with tab2:
+            st.header("Product Inventory")
+            products = fetch_products()
+            if products:
+                # Convert to DataFrame for better display
+                df = pd.DataFrame(products)
+                
+                # Reorder columns if they exist
+                cols = ['id', 'name', 'category', 'price', 'stock_quantity', 'visual_description']
+                existing_cols = [c for c in cols if c in df.columns]
+                other_cols = [c for c in df.columns if c not in existing_cols]
+                
+                st.dataframe(df[existing_cols + other_cols], use_container_width=True)
+            else:
+                st.info("No products found in the database. Add some!")

@@ -20,8 +20,8 @@ function parseProductRecommendation(content) {
 
         const [, productName, priceAndStock, description, imageUrl] = match;
 
-        const priceMatch = priceAndStock.match(/\$(\d+)/);
-        const price = priceMatch ? `$${priceMatch[1]}` : '$0';
+        const priceMatch = priceAndStock.match(/[₦$](\d+)/);
+        const price = priceMatch ? `₦${priceMatch[1]}` : '₦0';
 
         let stockStatus = 'In Stock';
         let stockIcon = '✓';
@@ -71,7 +71,27 @@ function formatText(text) {
 
 export default function ChatMessage({ message }) {
     const isUser = message.role === 'user';
-    const parts = isUser ? [{ type: 'text', content: message.content }] : parseProductRecommendation(message.content);
+    let parts = [];
+    if (isUser) {
+        if (message.image_url) {
+            parts = [
+                { type: 'text', content: message.content },
+                {
+                    type: 'product', // Reusing product type for convenient image rendering
+                    name: 'Uploaded Image',
+                    price: '', // No price
+                    stockStatus: '',
+                    stockIcon: '',
+                    description: '',
+                    imageUrl: message.image_url
+                }
+            ];
+        } else {
+            parts = [{ type: 'text', content: message.content }];
+        }
+    } else {
+        parts = parseProductRecommendation(message.content);
+    }
 
     return (
         <div className={`${styles.messageWrapper} ${isUser ? styles.userWrapper : styles.assistantWrapper}`}>

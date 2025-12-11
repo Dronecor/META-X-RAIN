@@ -8,7 +8,9 @@ from backend import models
 import os
 
 # Create tables
+print(f"Connecting to database with engine: {engine.url}")
 Base.metadata.create_all(bind=engine)
+print("Database tables created successfully.")
 
 app = FastAPI(
     title=settings.PROJECT_NAME,

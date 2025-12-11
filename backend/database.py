@@ -3,13 +3,18 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 from backend.config import settings
 
 # Construct DATABASE_URL if not explicitly provided
-if not settings.DATABASE_URL:
+# Construct DATABASE_URL if not explicitly provided
+if settings.DATABASE_URL:
+    SQLALCHEMY_DATABASE_URL = settings.DATABASE_URL
+elif settings.POSTGRES_SERVER and settings.POSTGRES_DB:
     SQLALCHEMY_DATABASE_URL = (
         f"postgresql://{settings.POSTGRES_USER}:{settings.POSTGRES_PASSWORD}"
         f"@{settings.POSTGRES_SERVER}:{settings.POSTGRES_PORT}/{settings.POSTGRES_DB}"
     )
 else:
-    SQLALCHEMY_DATABASE_URL = settings.DATABASE_URL
+    # Fallback to SQLite
+    SQLALCHEMY_DATABASE_URL = "sqlite:///./agentic_crm.db"
+    print("WARNING: No DATABASE_URL or Postgres config found. Using default SQLite DB.")
 
 connect_args = {}
 if "sqlite" in SQLALCHEMY_DATABASE_URL:
