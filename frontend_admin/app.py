@@ -4,7 +4,7 @@ import pandas as pd
 import os
 
 # Configuration
-BACKEND_URL = os.getenv("BACKEND_API_URL", "http://localhost:8000/api/v1")
+BACKEND_URL = os.getenv("NEXT_PUBLIC_BACKEND_API_URL", "http://localhost:8000/api/v1")
 st.set_page_config(page_title="ShopBuddy Admin", page_icon="🛍️", layout="wide")
 
 # Styling
