@@ -36,6 +36,8 @@ class User(Base):
     hashed_password = Column(String, nullable=True)
     is_active = Column(Boolean, default=True)
     role = Column(String, default="customer") # customer, admin, etc.
+    bot_opt_in = Column(Boolean, default=False)
+
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     
     # Relationships

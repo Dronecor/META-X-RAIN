@@ -122,6 +122,93 @@ export default function Home() {
         }
     };
 
+
+
+    const handleImageUpload = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        // Add optimistic user message with image
+        const localImageUrl = URL.createObjectURL(file);
+        const updatedMessages = [...currentMessages, {
+            role: 'user',
+            content: `[Image Uploaded] Finding similar items...`,
+            image_url: localImageUrl
+        }];
+
+        setConversations({
+            ...conversations,
+            [activeConversationId]: {
+                ...conversations[activeConversationId],
+                messages: updatedMessages,
+            },
+        });
+
+        setIsLoading(true);
+
+        try {
+            // Upload to backend
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const uploadRes = await fetch(`${API_URL}/utils/upload`, {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!uploadRes.ok) throw new Error('Upload failed');
+
+            const { url } = await uploadRes.json();
+            // Append backend base URL if relative
+            const fullImageUrl = url.startsWith('http') ? url : `${API_URL.replace('/api/v1', '')}${url}`;
+
+            // Send to chat with image_url
+            const userMessage = "Find products like this";
+
+            const response = await fetch(`${API_URL}/chat/message`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    message: userMessage,
+                    image_url: fullImageUrl,
+                    user_id: user.email,
+                    user_name: user.full_name,
+                    email: user.email,
+                }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                const finalMessages = [...updatedMessages, { role: 'assistant', content: data.response }];
+
+                setConversations((prev) => ({
+                    ...prev,
+                    [activeConversationId]: {
+                        ...prev[activeConversationId],
+                        messages: finalMessages,
+                    },
+                }));
+            }
+        } catch (error) {
+            console.error('Visual Search Error:', error);
+            // Handle error in UI
+            setConversations((prev) => ({
+                ...prev,
+                [activeConversationId]: {
+                    ...prev[activeConversationId],
+                    messages: [
+                        ...updatedMessages,
+                        { role: 'assistant', content: 'Failed to process image. Please try again.' },
+                    ],
+                },
+            }));
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const handleLogin = (userInfo) => {
         setUser(userInfo);
         // Create initial conversation with timestamp
@@ -247,7 +334,7 @@ export default function Home() {
                         ...prev[activeConversationId],
                         messages: [
                             ...updatedMessages,
-                            { role: 'assistant', content: 'Sorry, I encountered an error. Please try again.' },
+                            { role: 'assistant', content: '' },
                         ],
                     },
                 }));
@@ -365,10 +452,28 @@ export default function Home() {
 
                 <form onSubmit={sendMessage} className={styles.inputContainer}>
                     <input
+                        type="file"
+                        id="image-upload"
+                        className={styles.hiddenInput}
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        disabled={isLoading}
+                        style={{ display: 'none' }}
+                    />
+                    <button
+                        type="button"
+                        onClick={() => document.getElementById('image-upload').click()}
+                        className={styles.uploadButton}
+                        disabled={isLoading}
+                        title="Upload image for visual search"
+                    >
+                        📷
+                    </button>
+                    <input
                         type="text"
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
-                        placeholder="Ask about clothes, orders, etc..."
+                        placeholder="Ask about clothes, orders, or upload an image..."
                         className={styles.input}
                         disabled={isLoading}
                     />

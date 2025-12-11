@@ -423,3 +423,25 @@
         padding: 14px 24px;
     }
 }
+
+.uploadButton {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0 10px;
+    transition: transform 0.2s;
+}
+
+.uploadButton:hover {
+    transform: scale(1.1);
+}
+
+.uploadButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.hiddenInput {
+    display: none;
+}

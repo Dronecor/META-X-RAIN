@@ -188,3 +188,24 @@ For issues or questions:
 ---
 
 **Built with ❤️ for META Hackathon**
+
+## Admin Interface
+
+An admin interface built with Streamlit is available in `frontend_admin`.
+
+## Deployment
+
+See [DEPLOYMENT_INSTRUCTIONS.md](DEPLOYMENT_INSTRUCTIONS.md) for details on deploying the admin panel and backend.
+
+## Streamlit Admin App
+
+An alternative admin interface built with Streamlit is available in `frontend_admin`.
+
+1. Install requirements:
+   ```bash
+   pip install streamlit requests pandas
+   ```
+2. Run the app:
+   ```bash
+   streamlit run frontend_admin/app.py
+   ```

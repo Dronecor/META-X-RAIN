@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List, Dict, Any
 from backend.database import get_db
-from backend.models import Conversation, Message, User
+from backend.models import Conversation, Message, User, Order
 
 router = APIRouter()
 
@@ -53,3 +53,25 @@ def get_conversation_details(conversation_id: int, db: Session = Depends(get_db)
             } for m in messages
         ]
     }
+
+@router.get("/orders")
+def get_orders(skip: int = 0, limit: int = 50, db: Session = Depends(get_db)):
+    """
+    Get all orders for admin verification.
+    """
+    orders = db.query(models.Order).order_by(models.Order.created_at.desc()).offset(skip).limit(limit).all()
+    return orders
+
+@router.post("/orders/{order_id}/verify")
+def verify_order(order_id: int, status: str, db: Session = Depends(get_db)):
+    """
+    Update order status (e.g. to 'paid', 'shipped', 'cancelled').
+    """
+    order = db.query(models.Order).filter(models.Order.id == order_id).first()
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+    
+    order.status = status
+    db.commit()
+    db.refresh(order)
+    return order

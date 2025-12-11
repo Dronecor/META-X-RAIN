@@ -21,6 +21,9 @@ origins = [
     "http://localhost:3000",
     "http://localhost:8501", # Streamlit default port
     "http://localhost:8000",
+    "http://localhost:3001",
+    "http://localhost:3002",
+    "http://localhost:5000",
 ]
 
 # Add Vercel URL if in production
@@ -63,6 +66,9 @@ def health_check(db: Session = Depends(get_db)):
 
 from backend.api.v1.api import api_router
 app.include_router(api_router, prefix=settings.API_V1_STR)
+
+from fastapi.staticfiles import StaticFiles
+app.mount("/static", StaticFiles(directory="backend/static"), name="static")
 
 # Vercel serverless handler
 try:
